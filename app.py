@@ -1,8 +1,6 @@
-
-
-from flask import Flask
+from flask import Flask, render_template
 from views import main_blueprint
-
+from task import *
 
 app = Flask(__name__)
 

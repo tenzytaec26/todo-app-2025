@@ -12,18 +12,35 @@
     <form  method="POST">
         <div class="input-section">
         <input type="text" id="new-task" name="task-text" placeholder="Add a new task..." />
+        <select name="priority" aria-label="Priority">
+          <option value="low" selected>Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
         <button id="add-task-btn">Add Task</button>
         </div>
     </form>
     
     <ul id="task-list">
-      <li class="completed">Learn HTML, CSS, and JavaScript.</li>
-      <li class="not-completed">Learn Flask.</li>
-      <li class="not-completed">Build a to-do app.</li>
-      
+      {% for task in tasks %}
+        <li class="{{'completed' if task.done else 'not-completed'}} priority-{{ task.priority }}">
+          <span>[{{ task.id }}]</span>
+          <span>{{ task.title }}</span>
+          <span class="badge badge-{{ task.priority }}">{{ task.priority|capitalize }}</span>
+          <a class="inline" href="{{ url_for('main.update', task_id=task.id) }}">  Edit</a>
+          <form method="POST" action="{{ url_for('main.toggle', task_id=task.id) }}" style="display:inline">
+            <button type="submit">{{ 'Undo' if task.done else 'Done' }}</button>
+          </form>
+          <form method="POST" action="{{ url_for('main.delete', task_id=task.id) }}" style="display:inline">
+            <button type="submit">Delete</button>
+          </form>
+        </li>
+      {% else %}
+        <li>"No tasks yes. Add a task!"</li>
+      {% endfor %}
     </ul>
   </div>
 
-  <script src="todo-script.js"></script>
+  <!-- <script src="todo-script.js"></script> -->
 </body>
 </html>
